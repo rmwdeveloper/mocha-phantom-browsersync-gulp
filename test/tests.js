@@ -1,5 +1,6 @@
 var assert = require('assert');
-
+var textChanger = require('../src/text-changer.js');
+console.log(textChanger);
 describe('TextChanger', function(){
     var element = document.createElement("section");
     element.appendChild(
@@ -11,11 +12,14 @@ describe('TextChanger', function(){
 
     describe('#changeText(element, text)', function() {
         it('should replace the content of the element with given text', function() {
-            assert.equal(false, true);
+            textChanger.replaceText(element, 'test');
+            assert.equal(element.childNodes[0].nodeValue, 'test');
         });
 
         it('should throw and error if element is not a DOM element', function() {
-            assert.equal(false, true);
+            assert.throws(function() {
+                textChanger.replaceText(null, 'test');
+            },/DOM element/);
         });
     });
 });

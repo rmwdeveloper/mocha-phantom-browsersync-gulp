@@ -1075,8 +1075,32 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":4,"_process":3,"inherits":2}],6:[function(require,module,exports){
-var assert = require('assert');
+var textChanger = {
+    replaceText: function(element, newText){
+        if(!this.isDomElement(element)){
+            throw new Error("element is not a DOM element!");
+        }
+        this.removeChildren(element);
+        element.appendChild(
+            document.createTextNode(newText)
+        )
+    },
+    isDomElement: function(element){
+        return (element && element.nodeType && element.nodeType === 1);
+    },
 
+    removeChildren: function (element) {
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+    }
+};
+
+module.exports = textChanger;
+},{}],7:[function(require,module,exports){
+var assert = require('assert');
+var textChanger = require('../src/text-changer.js');
+console.log(textChanger);
 describe('TextChanger', function(){
     var element = document.createElement("section");
     element.appendChild(
@@ -1088,12 +1112,15 @@ describe('TextChanger', function(){
 
     describe('#changeText(element, text)', function() {
         it('should replace the content of the element with given text', function() {
-            assert.equal(false, true);
+            textChanger.replaceText(element, 'test');
+            assert.equal(element.childNodes[0].nodeValue, 'test');
         });
 
         it('should throw and error if element is not a DOM element', function() {
-            assert.equal(false, true);
+            assert.throws(function() {
+                textChanger.replaceText(null, 'test');
+            },/DOM element/);
         });
     });
 });
-},{"assert":1}]},{},[6]);
+},{"../src/text-changer.js":6,"assert":1}]},{},[7]);
